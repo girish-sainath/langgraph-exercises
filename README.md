@@ -10,11 +10,11 @@ A LangGraph-based multi-intent chatbot that classifies user messages and routes 
 
 Every message passes through a `classifier` node that labels the intent, then routes to the appropriate agent:
 
-| Intent | Route | Description |
-|--------|-------|-------------|
-| `chat` | `chat_agent` | General-purpose conversation |
-| `knowledge` | `rag_agent` | RAG over an in-memory knowledge base |
-| `code` | `prepare_coding_request` → `accept_coding` | Human-in-the-loop coding workflow |
+| Intent      | Route                                        | Description                           |
+|-------------|----------------------------------------------|---------------------------------------|
+| `chat`      | `chat_agent`                                 | General-purpose conversation          |
+| `knowledge` | `rag_agent`                                  | RAG over an in-memory knowledge base  |
+| `code`      | `prepare_coding_request` → `accept_coding`   | Human-in-the-loop coding workflow     |
 
 ### Coding workflow (human-in-the-loop)
 
@@ -87,12 +87,12 @@ cp .env.example .env
 
 Key environment variables:
 
-| Variable | Purpose |
-|----------|---------|
-| `MODEL_ACCESS` | `litellm` for proxy, anything else for direct API |
-| `ANTHROPIC_API_KEY` | Required for direct Anthropic access |
-| `OPENAI_API_KEY` | Required for LiteLLM proxy |
-| `OPENAI_BASE_URL` | LiteLLM proxy base URL |
+| Variable            | Purpose                                           |
+|---------------------|---------------------------------------------------|
+| `MODEL_ACCESS`      | `litellm` for proxy, anything else for direct API |
+| `ANTHROPIC_API_KEY` | Required for direct Anthropic access              |
+| `OPENAI_API_KEY`    | Required for LiteLLM proxy                        |
+| `OPENAI_BASE_URL`   | LiteLLM proxy base URL                            |
 
 ## Running
 
