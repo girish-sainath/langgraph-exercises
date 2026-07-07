@@ -1,47 +1,15 @@
 """
 A simple example of a chat application using LangGraph and LangChain.
 """
-from dataclasses import dataclass, field
-from typing import Annotated, Any
 from uuid import uuid4
 from dotenv import load_dotenv
 
+from langgraph.types import Command
 
-from langchain_core.messages import AnyMessage
-from langchain_litellm import ChatLiteLLM
-from langgraph.graph import END, START, StateGraph
-from langgraph.graph.message import add_messages
-from langgraph.checkpoint.memory import InMemorySaver
+from src.graphs.build_graph import build_graph
 
 
 load_dotenv()
-
-
-@dataclass
-class ChatState:
-    """State class for the chat application, holding the list of messages."""
-    messages: Annotated[list[AnyMessage], add_messages] = field(default_factory=list)
-
-
-def prompt_llm(state: ChatState) -> dict[str, list[AnyMessage]]:
-    """Prompt the LLM with the graph and messages state, returning the LLM's response."""
-    model = ChatLiteLLM(
-        model='sap/anthropic--claude-4.6-sonnet',
-        temperature=0.1,
-    )
-    response = model.invoke(state.messages)
-    return {'messages': [response]}
-
-
-def build_graph():
-    """Build a simple graph with a single LLM prompt node."""
-    graph_builder: Any = StateGraph(ChatState)  # type: ignore[arg-type]
-    graph_builder.add_node('prompt_llm', prompt_llm)
-    graph_builder.add_edge(START, 'prompt_llm')
-    graph_builder.add_edge('prompt_llm', END)
-
-    checkpointer = InMemorySaver()
-    return graph_builder.compile(checkpointer=checkpointer)
 
 
 def main():
@@ -52,8 +20,8 @@ def main():
     """
     graph = build_graph()
 
-    print('Programming Assistant...')
-    print('Type "exit" to quit...')
+    graph.get_graph().draw_mermaid_png(output_file_path='graph.png')
+
     config = {'configurable': {'thread_id': uuid4()}}
     while True:
         user_message = input('\nEnter your message: ')
@@ -70,6 +38,11 @@ def main():
             },
             config=config,
         )
+
+        while '__interrupt__' in graph_response:
+            prompt = graph_response['__interrupt__'][0].value
+            decision = input(f'\n{prompt}\n')
+            graph_response = graph.invoke(Command[str](resume=decision), config=config)
         print('Response from LLM:\n', graph_response['messages'][-1].content)
 
 
