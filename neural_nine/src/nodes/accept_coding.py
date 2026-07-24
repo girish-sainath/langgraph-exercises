@@ -23,7 +23,9 @@ def accept_coding(state: State):
     text = str(decision).strip().lower()
 
     if text in ['y', 'yes', 'approve', 'ok']:
-        return {'next_node': 'coding_agent'}
+        return {
+            'next_node': 'coding_agent',
+        }
 
     if text in [
         'n',
@@ -37,8 +39,8 @@ def accept_coding(state: State):
                 [
                     {
                         'role': 'assistant',
-                        'content': 'Coding request rejected.'
-                    }
+                        'content': 'Coding request rejected.',
+                    },
                 ],
             'next_node': 'denied',
         }
@@ -49,7 +51,7 @@ def accept_coding(state: State):
                 {
                     'role': 'user',
                     'content': text,
-                }
+                },
             ],
         'next_node': 'revise',
     }

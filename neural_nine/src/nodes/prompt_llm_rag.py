@@ -10,6 +10,7 @@ from langchain_core.documents import Document
 from src.models.ModelInfo import ModelInfo
 from src.models.ModelFactory import ModelFactory
 
+
 from src.states.State import State
 
 
@@ -85,9 +86,9 @@ def prompt_llm_rag(state: State) -> dict[str, Any]:
         'messages': [
             {
                 'role': 'assistant',
-                'content': response.content
+                'content': response.content,
             }
-        ]
+        ],
     }
 
 

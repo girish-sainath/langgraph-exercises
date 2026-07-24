@@ -24,7 +24,15 @@ def prompt_llm_code(state: State) -> dict[str, Any]:
 
     response = result.stdout.strip() or result.stderr.strip()
 
-    return {'messages': [{'role': 'assistant', 'content': response}]}
+    return {
+        'messages':
+            [
+                {
+                    'role': 'assistant',
+                    'content': response,
+                },
+            ],
+        }
 
 
 __all__ = [
